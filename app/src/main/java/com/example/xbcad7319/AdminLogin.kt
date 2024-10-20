@@ -10,6 +10,7 @@ import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.xbcad7311.R
+import com.example.xbcad7319.AdminMainActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class AdminLogin : AppCompatActivity() {
@@ -73,7 +74,7 @@ class AdminLogin : AppCompatActivity() {
                     // Login successful
                     Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
                     // Navigate to the main admin dashboard or home screen
-                    val intent = Intent(this@AdminLogin, MainActivity::class.java)
+                    val intent = Intent(this@AdminLogin, AdminMainActivity::class.java)
                     startActivity(intent)
                     finish() // Finish the login activity
                 } else {
