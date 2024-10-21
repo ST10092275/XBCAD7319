@@ -58,20 +58,39 @@
             android:layout_gravity="center"/>
 
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="320dp"
+            app:passwordToggleEnabled="true">
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="350dp"
-            android:layout_height="55dp"
-            android:hint="Password"
-            android:background="@drawable/border"
-            android:padding="10dp"
-            android:textColor="@android:color/black"
-            android:textSize="25sp"
-            android:layout_marginTop="-15dp"
-            android:layout_gravity="center"/>
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="350dp"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="-15dp"
+                android:background="@drawable/border"
+                android:hint="Password"
+                android:padding="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="25sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-
+        <TextView
+            android:id="@+id/forgotpassword"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="right"
+            android:layout_marginTop="385dp"
+            android:text="Forgot Password"
+            android:textColor="@color/green"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
+            android:layout_marginEnd="33dp"
+            android:clickable="true"
+            android:focusable="true"/>
 
         <Button
             android:id="@+id/btnLogin"
@@ -80,14 +99,14 @@
             android:text="Login"
             android:textSize="23sp"
             android:layout_gravity="center"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="95dp"
             android:backgroundTint="@color/green"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:gravity="center"
-            android:layout_marginTop="495dp"
+            android:layout_marginTop="510dp"
             android:text="Don't have an account?"
             android:textColor="@color/green"
             android:textSize="20sp"
@@ -98,13 +117,16 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:gravity="center"
-            android:layout_marginTop="520dp"
+            android:layout_marginTop="530dp"
             android:text="Register"
             android:textColor="@color/green"
             android:textSize="20sp"
             android:textStyle="italic"
             android:clickable="true"
             android:focusable="true"/>
+
+
+
     </FrameLayout>
 
 </layout>

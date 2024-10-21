@@ -11,7 +11,10 @@ import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.xbcad7311.R
+import com.example.xbcad7319.AdminMainActivity
+import com.example.xbcad7319.ForgotPasswordActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class Login : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -34,6 +37,7 @@ class Login : AppCompatActivity() {
 
         loginButton.setOnClickListener {
             loginUser()
+
         }
 
         val registration = findViewById<TextView>(R.id.register)
@@ -54,6 +58,11 @@ class Login : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }
+        }
+        val forgotPasswordTextView: TextView = findViewById(R.id.forgotpassword)
+        forgotPasswordTextView.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
         }
 
     }
@@ -82,5 +91,5 @@ class Login : AppCompatActivity() {
                 }
             }
     }
-    }
+}
 

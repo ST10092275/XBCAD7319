@@ -11,6 +11,7 @@ import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.xbcad7311.R
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AdminRegister : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -93,23 +94,29 @@ class AdminRegister : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(emailText, passwordText)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Registration successful
-                    Toast.makeText(
-                        this,
-                        "Registration successful",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val user = auth.currentUser
+                    val userId = user?.uid ?: ""
 
+                    // Store the admin's additional info in Firestore
+                    val userData = hashMapOf(
+                        "fullname" to fullname.text.toString().trim(),
+                        "number" to number,
+                        "role" to "admin" // Set role as admin
+                    )
 
+                    val db = FirebaseFirestore.getInstance()
+                    db.collection("users").document(userId).set(userData)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Admin registered successfully", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(this, "Error saving user info: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
                 } else {
-                    // If registration fails, display a message to the user
-                    Toast.makeText(
-                        this,
-                        "Registration failed: ${task.exception?.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
     }
+
 }
 
