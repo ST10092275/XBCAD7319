@@ -1,10 +1,13 @@
 package com.example.xbcad7319
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.xbcad7311.AdminRegister
+import com.example.xbcad7311.Login
 import com.example.xbcad7311.R
 import com.google.firebase.auth.FirebaseAuth
 
@@ -13,6 +16,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
     private lateinit var emailEditText: EditText
     private lateinit var resetPasswordButton: Button
     private lateinit var auth: FirebaseAuth
+    private lateinit var login: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +27,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
         emailEditText = findViewById(R.id.email)
         resetPasswordButton = findViewById(R.id.reset)
+        login = findViewById(R.id.login)
 
         // Set up the button to trigger the password reset
         resetPasswordButton.setOnClickListener {
@@ -34,8 +39,12 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 sendPasswordResetEmail(email)
             }
         }
-    }
 
+        login.setOnClickListener {
+            val intent = Intent(this@ForgotPasswordActivity, Login::class.java)
+            startActivity(intent)
+        }
+    }
     private fun sendPasswordResetEmail(email: String) {
         auth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
