@@ -1,26 +1,30 @@
 package com.example.xbcad7319
 
 import android.os.Bundle
+import android.content.Intent
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.Toast
 import com.example.xbcad7311.R
+import com.example.xbcad7319.data.model.ServiceRequest
+import com.google.firebase.firestore.FirebaseFirestore
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FragmentAdminService.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FragmentAdminService : Fragment() {
-    // TODO: Rename and change types of parameters
+
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var listView: ListView
+    private lateinit var adapter: ArrayAdapter<String>
+    private var serviceRequests = mutableListOf<ServiceRequest>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,20 +38,62 @@ class FragmentAdminService : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_admin_service, container, false)
+        val view = inflater.inflate(R.layout.fragment_admin_service, container, false)
+
+        // Initialize Firestore
+        firestore = FirebaseFirestore.getInstance()
+        listView = view.findViewById(R.id.lvRequests)
+
+        // Set up the ArrayAdapter
+        adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, mutableListOf())
+        listView.adapter = adapter
+
+        loadRequests()
+
+        listView.setOnItemClickListener { parent, view, position, id ->
+            val selectedRequest = serviceRequests[position]
+            val fragment = FragmentAdminDecision.newInstance(
+                selectedRequest.id,
+                selectedRequest.fullName,
+                selectedRequest.service_description
+            )
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment) // Replace with your fragment container's ID
+                .addToBackStack(null)
+                .commit()
+        }
+
+        return view
+    }
+
+    private fun loadRequests() {
+        firestore.collection("service_requests")
+            .get()
+            .addOnSuccessListener { documents ->
+                Log.d("ServiceRequest", "Documents fetched: ${documents.size()}")
+                serviceRequests.clear()
+                adapter.clear()
+
+                if (!documents.isEmpty) {
+                    for (document in documents) {
+                        val request = document.toObject(ServiceRequest::class.java)
+                        request.id = document.id // Set the document ID
+                        serviceRequests.add(request)
+                        adapter.add("${request.fullName} requested for ${request.service_description}")
+                        Log.d("ServiceRequest", "Added request: $request")
+                    }
+                    adapter.notifyDataSetChanged()
+                } else {
+                    Log.d("ServiceRequest", "No data found in Firestore.")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("ServiceRequest", "Error fetching documents: $exception")
+                Toast.makeText(requireContext(), "Failed to load requests", Toast.LENGTH_SHORT).show()
+            }
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FragmentAdminService.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             FragmentAdminService().apply {

@@ -1,6 +1,7 @@
 package com.example.xbcad7311
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -89,20 +90,23 @@ class Register : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(emailInput, passwordInput)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // User registered successfully
                     val user = auth.currentUser
                     val userId = user?.uid ?: ""
 
-                    // Store additional user info in Firestore
+                    // Store user info in Firestore
                     storeUserInfo(userId, fullNameInput, numberInput)
 
+                    val sharedPreferences: SharedPreferences = getSharedPreferences("User Prefs", MODE_PRIVATE)
+                    sharedPreferences.edit().putString("FULL_NAME", fullNameInput).apply()
+
                     Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-                    // Navigate to the main activity after successful registration
+
+                    // Pass the full name to the Login activity
                     val intent = Intent(this, Login::class.java)
+                    intent.putExtra("FULL_NAME", fullNameInput)
                     startActivity(intent)
-                    finish() // Close this activity
+                    finish()
                 } else {
-                    // Registration failed
                     Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }

@@ -57,4 +57,5 @@
     </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="service_image">service_image\n</string>
 </resources>
