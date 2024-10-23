@@ -2,6 +2,7 @@ package com.example.xbcad7311
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -11,7 +12,9 @@ import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.xbcad7311.R
 import com.example.xbcad7319.AdminMainActivity
+import com.example.xbcad7319.ForgotPasswordActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AdminLogin : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -20,6 +23,7 @@ class AdminLogin : AppCompatActivity() {
     private lateinit var loginButton: Button
     private lateinit var toggleButton: ToggleButton
     private lateinit var mainLayout: FrameLayout
+    private lateinit var errorMessage: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +35,7 @@ class AdminLogin : AppCompatActivity() {
         email = findViewById(R.id.email)
         password = findViewById(R.id.password)
         loginButton = findViewById(R.id.btnLogin)
+        errorMessage = findViewById(R.id.errorMessage)
 
         val registration = findViewById<TextView>(R.id.register)
 
@@ -55,31 +60,46 @@ class AdminLogin : AppCompatActivity() {
                 finish() // Optional: Call finish() if you don't want to return to this activity
             }
         }
+        val forgotPasswordTextView: TextView = findViewById(R.id.forgotpassword)
+        forgotPasswordTextView.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     private fun loginAdmin() {
         val emailText = email.text.toString().trim()
         val passwordText = password.text.toString().trim()
 
-        // Basic input validation
         if (emailText.isEmpty() || passwordText.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            errorMessage.text = "Please fill in all fields"
+            errorMessage.visibility = View.VISIBLE
             return
         }
 
-        // Sign in using Firebase Authentication
         auth.signInWithEmailAndPassword(emailText, passwordText)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Login successful
-                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                    // Navigate to the main admin dashboard or home screen
-                    val intent = Intent(this@AdminLogin, AdminMainActivity::class.java)
-                    startActivity(intent)
-                    finish() // Finish the login activity
+                    val userId = auth.currentUser?.uid ?: ""
+                    val db = FirebaseFirestore.getInstance()
+                    db.collection("users").document(userId).get()
+                        .addOnSuccessListener { document ->
+                            if (document != null && document.getString("role") == "admin") {
+                                errorMessage.visibility = View.GONE // Hide error message
+                                val intent = Intent(this@AdminLogin, AdminMainActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            } else {
+                                auth.signOut()
+                                errorMessage.visibility = View.VISIBLE
+                                errorMessage.text = "Not an admin account" // Show error message
+
+                            }
+                        }
                 } else {
-                    // If login fails, display a message to the user
-                    Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    errorMessage.text = "Login failed: ${task.exception?.message}"
+                    errorMessage.visibility = View.VISIBLE
                 }
             }
     }
