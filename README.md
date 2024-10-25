@@ -1,4 +1,4 @@
-Link toi Github repository: https://github.com/ST10092275/XBCAD7319.git
+Link to Github repository: https://github.com/ST10092275/XBCAD7319.git
 
 # ConsultEase
 ConsultEase is a mobile application created for Versatex Trading 505 (Pty)Ltd in order to mordenise their ways on consulting proceedings while making it easy for them too.
