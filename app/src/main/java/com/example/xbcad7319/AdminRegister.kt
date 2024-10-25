@@ -10,6 +10,7 @@ import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.xbcad7311.R
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -32,6 +33,7 @@ class AdminRegister : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_register)
+        FirebaseApp.initializeApp(this)
 
         auth = FirebaseAuth.getInstance()
         toggleButton = findViewById(R.id.toggleButton)
@@ -100,7 +102,7 @@ class AdminRegister : AppCompatActivity() {
                     // Store the admin's additional info in Firestore
                     val userData = hashMapOf(
                         "fullname" to fullname.text.toString().trim(),
-                        "number" to number,
+                        "number" to number.text.toString().trim(), // Corrected this line
                         "role" to "admin" // Set role as admin
                     )
 
@@ -117,6 +119,7 @@ class AdminRegister : AppCompatActivity() {
                 }
             }
     }
+
 
 }
 
