@@ -49,7 +49,7 @@ class AdminMainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 R.id.bottom_home -> loadFragment(FragmentHome())
                 R.id.bottom_person-> loadFragment(FragmentPerson())
                 R.id.bottom_reports -> loadFragment(FragmentReports())
-                R.id.bottom_message -> loadFragment(FragmentAdminMessage())
+                R.id.bottom_message -> loadFragment(FragmentAdminMessages())
 
             }
             true
