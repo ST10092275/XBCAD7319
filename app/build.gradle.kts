@@ -60,7 +60,4 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation ("com.google.firebase:firebase-auth-ktx:21.0.1")
-
-    implementation ("com.google.android.gms:play-services-wallet:19.4.0")
-    implementation("com.stripe:stripe-android:21.0.0")
 }
