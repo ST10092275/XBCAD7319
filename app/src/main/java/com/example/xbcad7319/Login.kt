@@ -15,6 +15,9 @@ import com.example.xbcad7319.AdminMainActivity
 import com.example.xbcad7319.ForgotPasswordActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseUser
+import java.util.*
+import kotlin.random.Random
 
 class Login : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -91,5 +94,6 @@ class Login : AppCompatActivity() {
                 }
             }
     }
+    
 }
 
