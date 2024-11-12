@@ -1,9 +1,8 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
-
+    tools:context="com.example.xbcad7319.FragmentPricelist">
 
     <Button
         android:id="@+id/googlePayButton"
@@ -13,10 +12,3 @@
         />
 
 </FrameLayout>
-
-    <RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</LinearLayout>
-
