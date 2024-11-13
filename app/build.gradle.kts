@@ -59,7 +59,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+<<<<<<< HEAD
     implementation("com.google.firebase:firebase-auth-ktx:23.1.0")
     // Add RecyclerView dependency
     implementation(libs.androidx.recyclerview) // or latest version
 }
+=======
+    implementation ("com.google.firebase:firebase-auth-ktx:21.0.1")
+}
+>>>>>>> 7b2294277f9743e8167c9cad78d4983238e00ca4
