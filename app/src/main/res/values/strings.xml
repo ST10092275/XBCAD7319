@@ -58,4 +58,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="service_image">service_image\n</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="send">Send</string>
+    <string name="type_a_message_to_admin">type_a_message</string>
+    <string name="client_name">Client Name</string>
+    <string name="ClientName">ClientName</string>
 </resources>

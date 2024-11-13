@@ -22,11 +22,19 @@ class FragmentMessage : Fragment() {
     private lateinit var messageList: MutableList<Message>
     private lateinit var messageAdapter: MessagesAdapter
     private lateinit var database: DatabaseReference
+    private lateinit var requestId: String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            requestId = it.getString("requestId") ?: ""
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMessagesBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -34,42 +42,36 @@ class FragmentMessage : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize message list and adapter
         messageList = mutableListOf()
         messageAdapter = MessagesAdapter(messageList)
 
-        // Set up RecyclerView
         binding.recyclerViewMessages.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = messageAdapter
         }
 
-        // Initialize Firebase Database reference
-        database = FirebaseDatabase.getInstance().getReference("messages")
-
-        // Set up a listener to retrieve messages from the database
+        database = FirebaseDatabase.getInstance().getReference("chats").child(requestId).child("messages")
         setupMessageListener()
 
-        // Send button click listener
         binding.sendButton.setOnClickListener {
             val messageText = binding.messageEdit.text.toString().trim()
             if (messageText.isNotEmpty()) {
-                // Create a unique message ID
                 val messageId = database.push().key ?: return@setOnClickListener
 
-                // Create a new message object
-                val newMessage = Message(id = messageId, senderId = "Client", content = messageText, timestamp = System.currentTimeMillis())
+                val newMessage = Message(
+                    id = messageId,
+                    senderId = "Client",
+                    content = messageText,
+                    timestamp = System.currentTimeMillis()
+                )
 
-                // Save the message to the database
                 database.child(messageId).setValue(newMessage).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        // Message successfully sent to database
-                        messageList.add(newMessage) // Add to local message list
+                        messageList.add(newMessage)
                         messageAdapter.notifyItemInserted(messageList.size - 1)
-                        binding.messageEdit.text.clear() // Clear the input field
-                        binding.recyclerViewMessages.scrollToPosition(messageList.size - 1) // Scroll to the latest message
+                        binding.messageEdit.text.clear()
+                        binding.recyclerViewMessages.scrollToPosition(messageList.size - 1)
                     } else {
-                        // Handle failure
                         Toast.makeText(context, "Failed to send message", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -78,7 +80,6 @@ class FragmentMessage : Fragment() {
     }
 
     private fun setupMessageListener() {
-        // Listen for new messages from the database
         database.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val newMessage = dataSnapshot.getValue(Message::class.java)
@@ -100,5 +101,12 @@ class FragmentMessage : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-}
 
+    companion object {
+        fun newInstance(requestId: String) = FragmentMessage().apply {
+            arguments = Bundle().apply {
+                putString("requestId", requestId)
+            }
+        }
+    }
+}
