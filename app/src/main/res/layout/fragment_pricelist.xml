@@ -1,5 +1,7 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -68,7 +70,6 @@
         android:src="@drawable/telephone"
         android:contentDescription="Telephone"
         android:layout_marginEnd="100dp"/>
-
             <TextView
                 android:layout_width="90dp"
                 android:layout_height="50dp"
@@ -94,3 +95,6 @@
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
+
+</FrameLayout>
+

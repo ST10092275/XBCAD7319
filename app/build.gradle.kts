@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-
+    // Your existing dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -72,6 +72,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
     implementation ("com.google.firebase:firebase-auth-ktx:23.1.0")
     implementation ("androidx.biometric:biometric:1.1.0")
     implementation("io.ktor:ktor-server-netty:2.2.4")
@@ -89,4 +90,9 @@ dependencies {
     val billing_version = "7.1.1"
 
     implementation("com.android.billingclient:billing-ktx:7.1.1")
+
+
+    implementation(libs.androidx.recyclerview) // or latest version
 }
+
+
