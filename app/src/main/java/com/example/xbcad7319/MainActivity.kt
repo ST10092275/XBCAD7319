@@ -16,6 +16,10 @@ import com.example.xbcad7319.FragmentPricelist
 import com.example.xbcad7319.FragmentService
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import javax.net.ssl.SSLContext
+import java.security.NoSuchAlgorithmException
+
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -40,9 +44,19 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-
+       // Set up TLS 1.2
+        try {
+            val context = SSLContext.getInstance("TLSv1.2")
+            context.init(null, null, null)
+            SSLContext.setDefault(context)
+        } catch (e: NoSuchAlgorithmException) {
+            e.printStackTrace()
+        }
         // Load the default fragment when the activity starts
         if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, FragmentPricelist())
+                .commit()
             loadFragment(FragmentService())
         }
     }
