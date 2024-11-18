@@ -15,37 +15,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
-    - name: Cache Gradle dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v2
-      with:
-        api-level: 33
-        build-tools: 33.0.2
-        target: android-33
-        ndk: latest
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 33
+          build-tools: 33.0.2
+          # Check if the following parameters are still valid
+          # target: android-33  # This might not be necessary
+          # ndk: latest  # This might not be necessary
 
-    - name: Set execute permission for gradlew
-      run: chmod +x ./gradlew
+      - name: Set execute permission for gradlew
+        run: chmod +x ./gradlew
 
-    - name: Build the project
-      run: ./gradlew assembleDebug
+      - name: Build the project
+        run: ./gradlew assembleDebug
 
-    - name: Run unit tests
-      run: ./gradlew testDebugUnitTest
-
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest
