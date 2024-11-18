@@ -37,12 +37,42 @@ jobs:
         with:
           api-level: 33
           build-tools: 33.0.2
-          # Check if the following parameters are still valid
-          # target: android-33  # This might not be necessary
-          # ndk: latest  # This might not be necessary
 
       - name: Set execute permission for gradlew
         run: chmod +x ./gradlew
+
+      - name: Build the project
+        run: ./gradlew assembleDebug
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest
+
+      # Optional: Run static code analysis
+      - name: Run Checkstyle
+        run: ./gradlew checkstyle
+
+      # Optional: Upload code coverage to Codecov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./build/reports/jacoco/testDebugUnitTest.exec
+
+      # Optional: Upload Debug APK
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-debug
+          path: ./build/outputs/apk/debug/app-debug.apk
+
+      # Optional: Deploy to Firebase App Distribution
+      - name: Deploy to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          token: ${{secrets.FIREBASE_AUTH_TOKEN}}
+          groups: testers
+          file: ./build/outputs/apk/debug/app-debug.apk
+
 
       - name: Build the project
         run: ./gradlew assembleDebug
