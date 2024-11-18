@@ -1,6 +1,8 @@
 package com.example.xbcad7311
 
 import android.content.Intent
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -10,11 +12,13 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.xbcad7311.R
 import com.example.xbcad7319.AdminMainActivity
 import com.example.xbcad7319.ForgotPasswordActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+
 
 class Login : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -34,6 +38,14 @@ class Login : AppCompatActivity() {
         email = findViewById(R.id.email)
         password = findViewById(R.id.password)
         loginButton = findViewById(R.id.btnLogin)
+
+        val biometricManager = BiometricManager.from(this)
+        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS) {
+            promptBiometricAuthentication()
+        } else {
+            Toast.makeText(this, "Biometric authentication is not available.", Toast.LENGTH_LONG)
+                .show()
+        }
 
         loginButton.setOnClickListener {
             loginUser()
@@ -66,6 +78,8 @@ class Login : AppCompatActivity() {
         }
 
     }
+
+
     private fun loginUser() {
         val emailInput = email.text.toString().trim()
         val passwordInput = password.text.toString().trim()
@@ -81,15 +95,46 @@ class Login : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Login successful
                     Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                    // Navigate to client main activity
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    finish() // Close this activity
+                    promptBiometricAuthentication()
+                    finish()
                 } else {
                     // Login failed
-                    Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "Login failed: ${task.exception?.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
     }
-}
 
+    private fun promptBiometricAuthentication() {
+        val executor = ContextCompat.getMainExecutor(this)
+        val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                // Navigate to MainActivity after successful authentication
+                startActivity(Intent(this@Login, MainActivity::class.java))
+                finish()
+            }
+
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                Toast.makeText(applicationContext, "Authentication error: $errString", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+                Toast.makeText(applicationContext, "Authentication failed", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for Goal Ignite")
+            .setSubtitle("Log in using your fingerprint")
+            .setNegativeButtonText("Use account password")
+            .build()
+
+        biometricPrompt.authenticate(promptInfo)
+    }
+}
