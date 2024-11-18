@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+
 }
 
 android {
@@ -34,10 +35,19 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures {
-        viewBinding = true
-        dataBinding = true
+    viewBinding {
+        enable = true
     }
+    dataBinding {
+        enable = true
+    }
+    packagingOptions {
+        excludes += "META-INF/INDEX.LIST"
+        excludes += "META-INF/*.SF"
+        excludes += "META-INF/*.DSA"
+        excludes += "META-INF/io.netty.versions.properties"
+    }
+
 }
 
 dependencies {
@@ -56,10 +66,33 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.car.ui.lib)
     implementation(libs.firebase.database.ktx)
+    implementation(libs.play.services.wallet)
+    implementation(libs.transportation.consumer)
+    implementation(libs.firebase.functions.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("com.google.firebase:firebase-auth-ktx:23.1.0")
-    // Add RecyclerView dependency
+
+    implementation ("com.google.firebase:firebase-auth-ktx:23.1.0")
+    implementation ("androidx.biometric:biometric:1.1.0")
+    implementation("io.ktor:ktor-server-netty:2.2.4")
+    implementation("io.ktor:ktor-server-core:2.2.4")
+    implementation("io.ktor:ktor-server-host-common:2.2.4")
+    implementation("io.ktor:ktor-server-content-negotiation:2.2.4")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.4")
+    implementation("io.ktor:ktor-server-status-pages:2.2.4")
+    implementation("io.ktor:ktor-server-request-validation:2.2.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation ("com.stripe:stripe-android:21.0.0")
+    implementation ("com.google.firebase:firebase-functions-ktx:20.0.0")
+    implementation ("com.google.android.gms:play-services-wallet:19.4.0")
+    implementation ("com.paypal.sdk:paypal-android-sdk:2.16.0")
+    val billing_version = "7.1.1"
+
+    implementation("com.android.billingclient:billing-ktx:7.1.1")
+
+
     implementation(libs.androidx.recyclerview) // or latest version
 }
+
+

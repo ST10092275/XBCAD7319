@@ -15,6 +15,9 @@ import com.example.xbcad7319.AdminMainActivity
 import com.example.xbcad7319.ForgotPasswordActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 
 class AdminLogin : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -36,6 +39,14 @@ class AdminLogin : AppCompatActivity() {
         password = findViewById(R.id.password)
         loginButton = findViewById(R.id.btnLogin)
         errorMessage = findViewById(R.id.errorMessage)
+
+        val biometricManager = BiometricManager.from(this)
+        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS) {
+            promptBiometricAuthentication()
+        } else {
+            Toast.makeText(this, "Biometric authentication is not available.", Toast.LENGTH_LONG)
+                .show()
+        }
 
         val registration = findViewById<TextView>(R.id.register)
 
@@ -87,8 +98,7 @@ class AdminLogin : AppCompatActivity() {
                         .addOnSuccessListener { document ->
                             if (document != null && document.getString("role") == "admin") {
                                 errorMessage.visibility = View.GONE // Hide error message
-                                val intent = Intent(this@AdminLogin, AdminMainActivity::class.java)
-                                startActivity(intent)
+                                promptBiometricAuthentication()
                                 finish()
                             } else {
                                 auth.signOut()
@@ -102,5 +112,35 @@ class AdminLogin : AppCompatActivity() {
                     errorMessage.visibility = View.VISIBLE
                 }
             }
+
+    }
+    private fun promptBiometricAuthentication() {
+        val executor = ContextCompat.getMainExecutor(this)
+        val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                // Navigate to MainActivity after successful authentication
+                startActivity(Intent(this@AdminLogin, MainActivity::class.java))
+                finish()
+            }
+
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                Toast.makeText(applicationContext, "Authentication error: $errString", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+                Toast.makeText(applicationContext, "Authentication failed", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for Goal Ignite")
+            .setSubtitle("Log in using your fingerprint")
+            .setNegativeButtonText("Use account password")
+            .build()
+
+        biometricPrompt.authenticate(promptInfo)
     }
 }

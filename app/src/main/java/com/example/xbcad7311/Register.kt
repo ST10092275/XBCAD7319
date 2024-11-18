@@ -28,6 +28,8 @@ class Register : AppCompatActivity() {
     private lateinit var mainLayout: FrameLayout
     private lateinit var register: Button
 
+    private val registeredEmails = mutableSetOf<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -75,6 +77,11 @@ class Register : AppCompatActivity() {
         val fullNameInput = fullname.text.toString().trim()
         val numberInput = number.text.toString().trim()
 
+        if (registeredEmails.contains(emailInput)) {
+            Toast.makeText(this, "Email already used in this session", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         if (emailInput.isEmpty() || passwordInput.isEmpty() || confirmPasswordInput.isEmpty() ||
             fullNameInput.isEmpty() || numberInput.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
@@ -86,6 +93,7 @@ class Register : AppCompatActivity() {
             return
         }
 
+        registeredEmails.add(emailInput)
         // Create a new user with email and password
         auth.createUserWithEmailAndPassword(emailInput, passwordInput)
             .addOnCompleteListener(this) { task ->
