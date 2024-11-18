@@ -11,7 +11,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.android.car.ui.toolbar.MenuItem
 import com.example.xbcad7311.R
-import com.example.xbcad7319.FragmentMessages
 import com.example.xbcad7319.FragmentPricelist
 import com.example.xbcad7319.FragmentService
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -35,7 +34,6 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.services -> loadFragment(FragmentService())
                 R.id.pricelist -> loadFragment(FragmentPricelist())
-                R.id.messages -> loadFragment(FragmentMessages())
                 R.id.logout -> startLoginActivity() // Fixed this part
             }
             true

@@ -27,8 +27,8 @@ class AdminRegister : AppCompatActivity() {
 
     private val predefinedPin = "91273"
 
-    // Define the authorized email for admin registration
-    private val authorizedEmail = "apds7311bank@gmail.com"
+    // Define the authorized email for admin registration912
+    private val authorizedEmail = "apds7311bank91@gmail.com"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,4 +122,3 @@ class AdminRegister : AppCompatActivity() {
 
 
 }
-

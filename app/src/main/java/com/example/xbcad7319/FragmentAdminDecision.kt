@@ -2,6 +2,7 @@ package com.example.xbcad7319
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.xbcad7311.R
+import com.example.xbcad7319.data.model.ServiceRequest
 import com.google.firebase.firestore.FirebaseFirestore
 
 class FragmentAdminDecision : Fragment() {
@@ -64,15 +66,40 @@ class FragmentAdminDecision : Fragment() {
     }
 
     private fun updateRequestStatus(status: String) {
-        // Update the request status in Firestore
-        firestore.collection("service_requests").document(requestId)
-            .update("status", status)
-            .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Request $status", Toast.LENGTH_SHORT).show()
-                requireActivity().onBackPressed() // Go back to the previous screen after the update
+        val requestRef = firestore.collection("service_requests").document(requestId)
+
+        requestRef.get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val request = document.toObject(ServiceRequest::class.java)
+                    request?.let {
+                        it.status = status
+
+                        // Add to history collection
+                        firestore.collection("service_requests_history").document(requestId)
+                            .set(it)
+                            .addOnSuccessListener {
+                                // Delete from the main collection
+                                requestRef.delete()
+                                    .addOnSuccessListener {
+                                        Toast.makeText(requireContext(), "Request $status", Toast.LENGTH_SHORT).show()
+                                        requireActivity().onBackPressed() // Go back after the update
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Toast.makeText(requireContext(), "Failed to delete request", Toast.LENGTH_SHORT).show()
+                                        Log.e("ServiceRequest", "Error deleting request: $e")
+                                    }
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(requireContext(), "Failed to add to history", Toast.LENGTH_SHORT).show()
+                                Log.e("ServiceRequest", "Error moving request to history: $e")
+                            }
+                    }
+                }
             }
-            .addOnFailureListener {
-                Toast.makeText(requireContext(), "Failed to update request", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Failed to load request details", Toast.LENGTH_SHORT).show()
+                Log.e("ServiceRequest", "Error fetching request: $e")
             }
     }
 

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.xbcad7319.FragmentAdminService"
+    tools:context="com.example.xbcad7319.AcceptandDeny"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="20dp">

@@ -19,6 +19,8 @@ googleGmsGoogleServices = "4.4.2"
 firebaseFirestore = "25.1.1"
 carUiLib = "2.6.0"
 firebaseDatabaseKtx = "21.0.0"
+recyclerview = "1.2.1"
+media3CommonKtx = "1.4.1" # Add the version for RecyclerView here
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,6 +40,8 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 car-ui-lib = { group = "com.android.car.ui", name = "car-ui-lib", version.ref = "carUiLib" }
 firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+androidx-media3-common-ktx = { group = "androidx.media3", name = "media3-common-ktx", version.ref = "media3CommonKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
