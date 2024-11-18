@@ -50,9 +50,9 @@ jobs:
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest
 
-      # Optional: Run static code analysis
-      - name: Run Checkstyle
-        run: ./gradlew checkstyle
+      # Optional: Run static code analysis with Detekt for Kotlin
+      - name: Run Detekt
+        run: ./gradlew detekt
 
       # Optional: Upload code coverage to Codecov
       - name: Upload coverage to Codecov
