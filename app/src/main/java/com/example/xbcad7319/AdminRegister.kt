@@ -10,7 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
-import com.example.xbcad7311.AdminLogin
 import com.example.xbcad7311.R
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -29,8 +28,6 @@ class AdminRegister : AppCompatActivity() {
 
     private val predefinedPin = "91273"
 
-    // Define the authorized email for admin registration
-    private val authorizedEmail = "apds7311bank@gmail.com"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

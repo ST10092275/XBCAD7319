@@ -6,14 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.xbcad7311.R
-import com.google.firebase.functions.FirebaseFunctions
-import com.stripe.android.PaymentConfiguration
-import com.stripe.android.payments.paymentlauncher.PaymentLauncher
+
 
 class FragmentPayment : Fragment() {
 
-    private lateinit var paymentLauncher: PaymentLauncher
-    private lateinit var firebaseFunctions: FirebaseFunctions
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

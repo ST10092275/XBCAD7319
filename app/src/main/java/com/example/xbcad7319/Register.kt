@@ -12,7 +12,6 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
-import com.example.xbcad7311.Login
 import com.example.xbcad7311.R
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth

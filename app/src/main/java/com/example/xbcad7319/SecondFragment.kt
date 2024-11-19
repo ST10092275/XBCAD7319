@@ -10,9 +10,7 @@ import com.example.xbcad7311.R
 import com.example.xbcad7311.databinding.FragmentSecondBinding
 
 
-/**
- * A simple [Fragment] subclass as the second destination in the navigation.
- */
+
 class SecondFragment : Fragment() {
 
     private var _binding: FragmentSecondBinding? = null

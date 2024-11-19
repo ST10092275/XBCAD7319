@@ -10,9 +10,6 @@ import com.example.xbcad7311.R
 import com.example.xbcad7311.databinding.FragmentFirstBinding
 
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 class FirstFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
