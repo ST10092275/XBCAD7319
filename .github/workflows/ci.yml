@@ -20,7 +20,7 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '8'
+          java-version: '11'
           distribution: 'temurin'  # Use 'temurin' instead of 'adoptopenjdk'
 
       # Step 3: Set execute permissions for gradlew
