@@ -64,7 +64,7 @@ class AdminHistoryRequests : Fragment() {
                         Log.d("HistoryRequests", "Request: ${request.fullName}, Status: ${request.status}")
 
                         // Add a string representation of the request to the adapter
-                        val displayText = "${request.fullName} - ${request.service_description} (${request.status})"
+                        val displayText = "${request.fullName} - ${request.serviceDescription} (${request.status})"
                         adapter.add(displayText)
                     }
                     adapter.notifyDataSetChanged()
