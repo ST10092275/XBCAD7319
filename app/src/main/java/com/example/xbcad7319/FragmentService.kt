@@ -1,9 +1,6 @@
 package com.example.xbcad7319
 
 
-
-
-
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment

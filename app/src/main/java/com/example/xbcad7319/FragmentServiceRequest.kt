@@ -1,6 +1,5 @@
 package com.example.xbcad7319
 
-
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -48,7 +47,7 @@ class FragmentServiceRequest : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_service_request, container, false)
-// Retrieve the full name from Shared Preferences
+        // Retrieve the full name from Shared Preferences
         val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("User Prefs",  MODE_PRIVATE)
         val displayName = sharedPreferences.getString("FULL_NAME", "User ") ?: "User "
         val displayService = serviceDescription ?: "Service"
