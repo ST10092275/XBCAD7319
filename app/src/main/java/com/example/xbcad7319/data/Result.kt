@@ -15,4 +15,5 @@ sealed class Result<out T : Any> {
             is Error -> "Error[exception=$exception]"
         }
     }
+
 }

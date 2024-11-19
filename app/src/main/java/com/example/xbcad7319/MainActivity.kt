@@ -3,6 +3,7 @@ package com.example.xbcad7319
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             context.init(null, null, null)
             SSLContext.setDefault(context)
         } catch (e: NoSuchAlgorithmException) {
-            e.printStackTrace()
+            Log.e("MainActivity", "TLS setup failed", e)
         }
         // Load the default fragment when the activity starts
         if (savedInstanceState == null) {

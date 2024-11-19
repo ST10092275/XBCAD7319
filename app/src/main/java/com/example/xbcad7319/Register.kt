@@ -27,7 +27,7 @@ class Register : AppCompatActivity() {
     private lateinit var number: EditText
     private lateinit var toggleButton: ToggleButton
     private lateinit var mainLayout: FrameLayout
-    private lateinit var register: Button
+    private lateinit var btnRegister: Button
 
     private val registeredEmails = mutableSetOf<String>()
 
@@ -46,10 +46,10 @@ class Register : AppCompatActivity() {
         number = findViewById(R.id.number)
         cpassword = findViewById(R.id.cpassword)
         fullname = findViewById(R.id.fullname)
-        register = findViewById(R.id.btnRegister)
+        btnRegister = findViewById(R.id.btnRegister)
         val registration = findViewById<TextView>(R.id.rLogin)
 
-        register.setOnClickListener {
+        btnRegister.setOnClickListener {
             registerUser()
         }
 
@@ -70,7 +70,6 @@ class Register : AppCompatActivity() {
             }
         }
     }
-
     private fun registerUser() {
         val emailInput = email.text.toString().trim()
         val passwordInput = password.text.toString().trim()
@@ -78,24 +77,27 @@ class Register : AppCompatActivity() {
         val fullNameInput = fullname.text.toString().trim()
         val numberInput = number.text.toString().trim()
 
-        if (registeredEmails.contains(emailInput)) {
-            Toast.makeText(this, "Email already used in this session", Toast.LENGTH_SHORT).show()
-            return
-        }
-
+        // Validate the inputs
+        // Check if any field is empty
         if (emailInput.isEmpty() || passwordInput.isEmpty() || confirmPasswordInput.isEmpty() ||
             fullNameInput.isEmpty() || numberInput.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
+        // Check if the email is already registered
+        if (registeredEmails.contains(emailInput)) {
+            Toast.makeText(this, "Email already used in this session", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Check if passwords match
         if (passwordInput != confirmPasswordInput) {
             Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
             return
         }
 
-        registeredEmails.add(emailInput)
-        // Create a new user with email and password
+        // Proceed with Firebase registration
         auth.createUserWithEmailAndPassword(emailInput, passwordInput)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -105,6 +107,7 @@ class Register : AppCompatActivity() {
                     // Store user info in Firestore
                     storeUserInfo(userId, fullNameInput, numberInput)
 
+                    // Save full name to SharedPreferences
                     val sharedPreferences: SharedPreferences = getSharedPreferences("User Prefs", MODE_PRIVATE)
                     sharedPreferences.edit().putString("FULL_NAME", fullNameInput).apply()
 
@@ -120,6 +123,7 @@ class Register : AppCompatActivity() {
                 }
             }
     }
+
 
     private fun storeUserInfo(userId: String, fullName: String, number: String) {
         val userData = hashMapOf(

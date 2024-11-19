@@ -20,11 +20,26 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.math.BigDecimal
 
-
-
 class FragmentPricelist : Fragment() {
 
     private var paymentTV: TextView? = null
+
+    // Define constants for prices
+    companion object {
+        const val ITEM1_PRICE = "27.35"
+        const val ITEM2_PRICE = "273.55"
+        const val ITEM3_PRICE = "43.77"
+        const val ITEM4_PRICE = "273.55"
+
+        const val CLIENT_KEY =
+            "AVKqnDlb_9KFaK-8LvM28tp06SE69U_nh3oSmHbEShqx65YJm5FQ1F3vfIHpwz1PGN1dyV0saLa4Ar65"
+        const val PAYPAL_REQUEST_CODE = 123
+
+        // PayPal Configuration Object
+        private val config: PayPalConfiguration = PayPalConfiguration()
+            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+            .clientId(CLIENT_KEY)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,11 +54,11 @@ class FragmentPricelist : Fragment() {
         val btnItem3 = rootView.findViewById<ImageButton>(R.id.btnItem3)
         val btnItem4 = rootView.findViewById<ImageButton>(R.id.btnItem4)
 
-        // Set onClick listeners for each ImageButton
-        btnItem1.setOnClickListener { startPayment("27.35") }
-        btnItem2.setOnClickListener { startPayment("273.55") }
-        btnItem3.setOnClickListener { startPayment("43.77") }
-        btnItem4.setOnClickListener { startPayment("273.55") }
+        // Set onClick listeners using constants
+        btnItem1.setOnClickListener { startPayment(ITEM1_PRICE) }
+        btnItem2.setOnClickListener { startPayment(ITEM2_PRICE) }
+        btnItem3.setOnClickListener { startPayment(ITEM3_PRICE) }
+        btnItem4.setOnClickListener { startPayment(ITEM4_PRICE) }
 
         return rootView
     }
@@ -71,39 +86,35 @@ class FragmentPricelist : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == PAYPAL_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                // Getting the payment confirmation
-                val confirm = data?.getParcelableExtra<PaymentConfirmation>(PaymentActivity.EXTRA_RESULT_CONFIRMATION)
+        if (requestCode != PAYPAL_REQUEST_CODE) return // Early exit if the request code is not matching
 
-                if (confirm != null) {
-                    try {
-                        // Getting the payment details
-                        val paymentDetails = confirm.toJSONObject().toString(4)
-                        val payObj = JSONObject(paymentDetails)
-                        val payID = payObj.getJSONObject("response").getString("id")
-                        val state = payObj.getJSONObject("response").getString("state")
-                        paymentTV?.text = "Payment $state\n with payment ID: $payID"
-                    } catch (e: JSONException) {
-                        Log.e("Error", "an unlikely failure occurred: ", e)
-                    }
-                }
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                Log.i("paymentExample", "The user canceled.")
-            } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
-                Log.i("paymentExample", "An invalid Payment or PayPalConfiguration was submitted.")
-            }
+        when (resultCode) {
+            Activity.RESULT_OK -> handlePaymentSuccess(data)
+            Activity.RESULT_CANCELED -> Log.i("paymentExample", "The user canceled.")
+            PaymentActivity.RESULT_EXTRAS_INVALID -> Log.i(
+                "paymentExample",
+                "An invalid Payment or PayPalConfiguration was submitted."
+            )
+
+            else -> Log.i("paymentExample", "Unhandled result code: $resultCode")
         }
     }
 
-    companion object {
-        const val clientKey: String = "AVKqnDlb_9KFaK-8LvM28tp06SE69U_nh3oSmHbEShqx65YJm5FQ1F3vfIHpwz1PGN1dyV0saLa4Ar65"
-        const val PAYPAL_REQUEST_CODE: Int = 123
+    private fun handlePaymentSuccess(data: Intent?) {
+        val confirm =
+            data?.getParcelableExtra<PaymentConfirmation>(PaymentActivity.EXTRA_RESULT_CONFIRMATION)
 
-        // PayPal Configuration Object
-        private val config: PayPalConfiguration = PayPalConfiguration()
-            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
-            .clientId(clientKey)
+        if (confirm != null) {
+            try {
+                val paymentDetails = confirm.toJSONObject().toString(4)
+                val payObj = JSONObject(paymentDetails)
+                val payID = payObj.getJSONObject("response").getString("id")
+                val state = payObj.getJSONObject("response").getString("state")
+                paymentTV?.text = "Payment $state\n with payment ID: $payID"
+            } catch (e: JSONException) {
+                Log.e("Error", "an unlikely failure occurred: ", e)
+            }
+        }
     }
 
 }
