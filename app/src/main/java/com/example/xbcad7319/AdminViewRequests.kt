@@ -50,12 +50,12 @@ class AdminViewRequests : Fragment() {
         // Load requests based on the parameter
         loadRequests()
 
-        listView.setOnItemClickListener { parent, view, position, id ->
+        listView.setOnItemClickListener { parent, view,position, id ->
             val selectedRequest: ServiceRequest = requests[position]
             val fragment: FragmentAdminDecision = FragmentAdminDecision.newInstance(
                 selectedRequest.id,
                 selectedRequest.fullName,
-                selectedRequest.service_description
+                selectedRequest.serviceDescription
             )
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
@@ -94,7 +94,7 @@ class AdminViewRequests : Fragment() {
                         requests.add(request)
 
                         // Add a string representation of the request to the adapter
-                        val displayText = "${request.fullName} - ${request.service_description} (${request.status})"
+                        val displayText = "${request.fullName} - ${request.serviceDescription} (${request.status})"
                         adapter.add(displayText)
                     }
                     adapter.notifyDataSetChanged()
