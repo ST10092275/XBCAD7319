@@ -128,4 +128,6 @@ class Login : AppCompatActivity() {
             Toast.makeText(this, "Biometric authentication is not available.", Toast.LENGTH_LONG).show()
         }
     }
+
 }
+

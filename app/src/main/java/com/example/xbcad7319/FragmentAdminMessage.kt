@@ -43,4 +43,5 @@ class FragmentAdminMessage : Fragment() {
                 }
             }
     }
+
 }

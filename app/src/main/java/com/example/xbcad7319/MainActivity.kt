@@ -6,17 +6,10 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import com.android.car.ui.toolbar.MenuItem
 import com.example.xbcad7311.R
-import com.example.xbcad7319.FragmentMessages
-import com.example.xbcad7319.FragmentPricelist
-import com.example.xbcad7319.FragmentService
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationView
 import javax.net.ssl.SSLContext
 import java.security.NoSuchAlgorithmException
 
@@ -84,4 +77,6 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         finish() // Optionally finish the current activity
     }
+
 }
+
