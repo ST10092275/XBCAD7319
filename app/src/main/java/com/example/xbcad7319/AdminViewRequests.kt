@@ -2,7 +2,6 @@ package com.example.xbcad7319
 
 
 import android.os.Bundle
-import android.content.Intent
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,11 +14,8 @@ import com.example.xbcad7311.R
 import com.example.xbcad7319.data.model.ServiceRequest
 import com.google.firebase.firestore.FirebaseFirestore
 
-
-
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-
 
 class AdminViewRequests : Fragment() {
     private var param1: String? = null
@@ -120,4 +116,6 @@ class AdminViewRequests : Fragment() {
                 }
             }
     }
+
 }
+

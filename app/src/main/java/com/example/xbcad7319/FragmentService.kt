@@ -19,10 +19,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 class FragmentService : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
-
-
 
     // Model class for a quote
     class Quote(private var description: String, private var image: Int) {
