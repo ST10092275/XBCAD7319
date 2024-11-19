@@ -23,48 +23,51 @@ jobs:
           java-version: '8'
           distribution: 'temurin'  # Use 'temurin' instead of 'adoptopenjdk'
 
-      # Step 3: Cache Gradle dependencies
+      # Step 3: Set execute permissions for gradlew
+      - name: Set execute permissions for gradlew
+        run: chmod +x gradlew
+
+      # Step 4: Cache Gradle dependencies
       - name: Cache Gradle
         uses: actions/cache@v3
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          path: ~/.gradle/caches
+          key: Linux-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-
+            Linux-gradle-
 
-      # Step 4: Install Gradle dependencies
+
+     
+   # Step 5: Install dependencies
       - name: Install Dependencies
         run: ./gradlew dependencies
 
-      # Step 5: Run unit tests
+      # Step 6: Run Unit Tests
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
 
-      # Step 6: Build APK
+      # Step 7: Build APK
       - name: Build APK
         run: ./gradlew assembleDebug
 
-      # Step 7: Upload APK as an artifact
+      # Step 8: Upload APK artifact
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
           name: debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
 
-      # Step 8: Run Detekt (Static Code Analysis)
+      # Step 9: Run Detekt (Static Code Analysis)
       - name: Run Detekt
         run: ./gradlew detekt
-        continue-on-error: true  # Ensures build continues if Detekt fails
 
-      # Step 9: Initialize CodeQL for security analysis
+      # Step 10: Initialize CodeQL
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
           languages: java
 
-      # Step 10: Perform CodeQL analysis
+      # Step 11: Perform CodeQL Analysis
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
 
