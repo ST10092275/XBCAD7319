@@ -33,6 +33,8 @@ class FragmentPricelist : Fragment() {
 
         const val CLIENT_KEY =
             "AVKqnDlb_9KFaK-8LvM28tp06SE69U_nh3oSmHbEShqx65YJm5FQ1F3vfIHpwz1PGN1dyV0saLa4Ar65"
+
+        // Define constant for PayPal request code to avoid magic number
         const val PAYPAL_REQUEST_CODE = 123
 
         // PayPal Configuration Object
@@ -40,7 +42,6 @@ class FragmentPricelist : Fragment() {
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
             .clientId(CLIENT_KEY)
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

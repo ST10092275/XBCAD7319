@@ -78,50 +78,40 @@ class Register : AppCompatActivity() {
         val numberInput = number.text.toString().trim()
 
         // Validate the inputs
-        // Check if any field is empty
         if (emailInput.isEmpty() || passwordInput.isEmpty() || confirmPasswordInput.isEmpty() ||
             fullNameInput.isEmpty() || numberInput.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // Check if the email is already registered
-        if (registeredEmails.contains(emailInput)) {
+        } else if (registeredEmails.contains(emailInput)) {
             Toast.makeText(this, "Email already used in this session", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // Check if passwords match
-        if (passwordInput != confirmPasswordInput) {
+        } else if (passwordInput != confirmPasswordInput) {
             Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
-            return
-        }
+        } else {
+            // Proceed with Firebase registration
+            auth.createUserWithEmailAndPassword(emailInput, passwordInput)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        val user = auth.currentUser
+                        val userId = user?.uid ?: ""
 
-        // Proceed with Firebase registration
-        auth.createUserWithEmailAndPassword(emailInput, passwordInput)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    val userId = user?.uid ?: ""
+                        // Store user info in Firestore
+                        storeUserInfo(userId, fullNameInput, numberInput)
 
-                    // Store user info in Firestore
-                    storeUserInfo(userId, fullNameInput, numberInput)
+                        // Save full name to SharedPreferences
+                        val sharedPreferences: SharedPreferences = getSharedPreferences("User Prefs", MODE_PRIVATE)
+                        sharedPreferences.edit().putString("FULL_NAME", fullNameInput).apply()
 
-                    // Save full name to SharedPreferences
-                    val sharedPreferences: SharedPreferences = getSharedPreferences("User Prefs", MODE_PRIVATE)
-                    sharedPreferences.edit().putString("FULL_NAME", fullNameInput).apply()
+                        Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
 
-                    Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-
-                    // Pass the full name to the Login activity
-                    val intent = Intent(this, Login::class.java)
-                    intent.putExtra("FULL_NAME", fullNameInput)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                        // Pass the full name to the Login activity
+                        val intent = Intent(this, Login::class.java)
+                        intent.putExtra("FULL_NAME", fullNameInput)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
+        }
     }
 
 
