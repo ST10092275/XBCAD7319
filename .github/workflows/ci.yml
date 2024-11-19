@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '8'
-          distribution: 'adoptopenjdk'
+          distribution: 'temurin'  # Use 'temurin' instead of 'adoptopenjdk'
 
       # Step 3: Cache Gradle dependencies
       - name: Cache Gradle
