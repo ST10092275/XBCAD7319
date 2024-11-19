@@ -1,0 +1,8 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.XBCAD7311" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/green</item> -->
+    </style>
+
+    <style name="Theme.XBCAD7311" parent="Base.Theme.XBCAD7311" />
+</resources>

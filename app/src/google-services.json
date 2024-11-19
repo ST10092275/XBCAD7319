@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "210123116392",
+    "project_id": "xbcad-1432e",
+    "storage_bucket": "xbcad-1432e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:210123116392:android:2adae499db15d38a4890dd",
+        "android_client_info": {
+          "package_name": "com.example.xbcad7311"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcQm5n86BI11uTxtR9hgAEUli-NLgMCnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.xbcad7319.FragmentAdminDecision"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tvRequestDetail"
+            android:layout_width="match_parent"
+            android:layout_height="186dp"
+            android:padding="40dp"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/ivServiceImage"
+            android:layout_width="293dp"
+            android:layout_height="170dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/service_image" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="155dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnAccept"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="Accept" />
+
+            <Button
+                android:id="@+id/btnDeny"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="Deny" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>
