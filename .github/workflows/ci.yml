@@ -55,21 +55,21 @@ jobs:
           name: debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
 
-      # Step 9: Initialize CodeQL
+      # Step 9: Security Test with Snyk
+      - name: Run Snyk Security Test
+        uses: snyk/actions/gradle-jdk17@master
+        with:
+          args: test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      # Step 10: Initialize CodeQL
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
           languages: java
 
-      # Step 10: Perform CodeQL Analysis
+      # Step 11: Perform CodeQL Analysis
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
-
-      # Step 11: Snyk Security Scan
-      - name: Security Test with Snyk
-        uses: snyk/actions@v3
-        with:
-          args: test
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
