@@ -1,5 +1,6 @@
 package com.example.xbcad7319
 
+
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -11,6 +12,8 @@ import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.xbcad7311.R
+import com.example.xbcad7319.AdminMainActivity
+import com.example.xbcad7319.ForgotPasswordActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import androidx.biometric.BiometricManager
@@ -38,10 +41,19 @@ class AdminLogin : AppCompatActivity() {
         loginButton = findViewById(R.id.btnLogin)
         errorMessage = findViewById(R.id.errorMessage)
 
+        val biometricManager = BiometricManager.from(this)
+        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS) {
+            promptBiometricAuthentication()
+        } else {
+            Toast.makeText(this, "Biometric authentication is not available.", Toast.LENGTH_LONG)
+                .show()
+        }
+
         val registration = findViewById<TextView>(R.id.register)
 
         // Set OnClickListener for the "Register" TextView
         registration.setOnClickListener {
+            // Navigate to AdminRegister Activity
             val intent = Intent(this@AdminLogin, AdminRegister::class.java)
             startActivity(intent)
         }
@@ -54,17 +66,18 @@ class AdminLogin : AppCompatActivity() {
         // ToggleButton logic to switch between layouts
         toggleButton.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
+                // Navigate to User Login Activity (standard login)
                 val intent = Intent(this@AdminLogin, Login::class.java)
                 startActivity(intent)
-                finish() // Optional: Call finish() to prevent returning to this activity
+                finish() // Optional: Call finish() if you don't want to return to this activity
             }
         }
-
         val forgotPasswordTextView: TextView = findViewById(R.id.forgotpassword)
         forgotPasswordTextView.setOnClickListener {
             val intent = Intent(this, ForgotPasswordActivity::class.java)
             startActivity(intent)
         }
+
     }
 
     private fun loginAdmin() {
@@ -72,7 +85,8 @@ class AdminLogin : AppCompatActivity() {
         val passwordText = password.text.toString().trim()
 
         if (emailText.isEmpty() || passwordText.isEmpty()) {
-            showError("Please fill in all fields")
+            errorMessage.text = "Please fill in all fields"
+            errorMessage.visibility = View.VISIBLE
             return
         }
 
@@ -83,68 +97,53 @@ class AdminLogin : AppCompatActivity() {
                     val db = FirebaseFirestore.getInstance()
                     db.collection("users").document(userId).get()
                         .addOnSuccessListener { document ->
-                            if (document.exists()) {
-                                val role = document.getString("role")
-                                if (role == "admin") {
-                                    errorMessage.visibility = View.GONE // Hide error message
-                                    promptBiometricAuthentication()
-                                } else {
-                                    auth.signOut()
-                                    showError("Not an admin account")
-                                }
+                            if (document != null && document.getString("role") == "admin") {
+                                errorMessage.visibility = View.GONE // Hide error message
+                                startActivity(Intent(this@AdminLogin, AdminMainActivity::class.java))
+                                finish()
                             } else {
                                 auth.signOut()
-                                showError("User record not found")
+                                errorMessage.visibility = View.VISIBLE
+                                errorMessage.text = "Not an admin account" // Show error message
+
                             }
                         }
-                        .addOnFailureListener {
-                            showError("Error retrieving user data: ${it.message}")
-                        }
                 } else {
-                    showError("Login failed: ${task.exception?.message}")
+                    errorMessage.text = "Login failed: ${task.exception?.message}"
+                    errorMessage.visibility = View.VISIBLE
                 }
             }
-    }
 
-    private fun showError(message: String) {
-        errorMessage.text = message
-        errorMessage.visibility = View.VISIBLE
     }
-
     private fun promptBiometricAuthentication() {
-        val biometricManager = BiometricManager.from(this)
-        if (biometricManager.canAuthenticate(
-                BiometricManager.Authenticators.BIOMETRIC_STRONG or
-                        BiometricManager.Authenticators.DEVICE_CREDENTIAL
-            ) == BiometricManager.BIOMETRIC_SUCCESS) {
-            val executor = ContextCompat.getMainExecutor(this)
-            val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                    super.onAuthenticationSucceeded(result)
-                    startActivity(Intent(this@AdminLogin, AdminMainActivity::class.java))
-                    finish()
-                }
+        val executor = ContextCompat.getMainExecutor(this)
+        val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                // Navigate to MainActivity after successful authentication
+                startActivity(Intent(this@AdminLogin, MainActivity::class.java))
+                finish()
+            }
 
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    super.onAuthenticationError(errorCode, errString)
-                    Toast.makeText(applicationContext, "Authentication error: $errString", Toast.LENGTH_SHORT).show()
-                }
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                Toast.makeText(applicationContext, "Authentication error: $errString", Toast.LENGTH_SHORT).show()
+            }
 
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                    Toast.makeText(applicationContext, "Authentication failed", Toast.LENGTH_SHORT).show()
-                }
-            })
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+                Toast.makeText(applicationContext, "Authentication failed", Toast.LENGTH_SHORT).show()
+            }
+        })
 
-            val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                .setTitle("ConsultEase")
-                .setSubtitle("Login using your fingerprint")
-                .setNegativeButtonText("Use account password")
-                .build()
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for Goal Ignite")
+            .setSubtitle("Log in using your fingerprint")
+            .setNegativeButtonText("Use account password")
+            .build()
 
-            biometricPrompt.authenticate(promptInfo)
-        } else {
-            Toast.makeText(this, "Biometric authentication is not available.", Toast.LENGTH_LONG).show()
-        }
+        biometricPrompt.authenticate(promptInfo)
     }
+
 }
+

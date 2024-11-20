@@ -48,19 +48,19 @@
             android:name="com.example.xbcad7319.AdminMainActivity"
             android:exported="false" />
         <activity
-            android:name=".AdminLogin"
+            android:name="com.example.xbcad7319.AdminLogin"
             android:exported="false" />
         <activity
-            android:name=".AdminRegister"
+            android:name="com.example.xbcad7319.AdminRegister"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name="com.example.xbcad7319.Login"
             android:exported="false" />
         <activity
-            android:name=".Register"
+            android:name="com.example.xbcad7319.Register"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.xbcad7319.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

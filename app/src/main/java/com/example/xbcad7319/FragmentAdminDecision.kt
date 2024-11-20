@@ -77,15 +77,6 @@ class FragmentAdminDecision : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param requestId ID of the service request.
-         * @param clientName Name of the client making the request.
-         * @param serviceType Type of service requested.
-         * @return A new instance of FragmentAdminDecision.
-         */
         @JvmStatic
         fun newInstance(requestId: String, clientName: String, serviceType: String) =
             FragmentAdminDecision().apply {
