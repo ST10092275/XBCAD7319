@@ -45,13 +45,7 @@ class Login : AppCompatActivity() {
         password = findViewById(R.id.password)
         loginButton = findViewById(R.id.btnLogin)
 
-        val biometricManager = BiometricManager.from(this)
-        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS) {
-            promptBiometricAuthentication()
-        } else {
-            Toast.makeText(this, "Biometric authentication is not available.", Toast.LENGTH_LONG)
-                .show()
-        }
+
 
         loginButton.setOnClickListener {
             loginUser()
@@ -100,8 +94,7 @@ class Login : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Login successful
                     Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this@Login, MainActivity::class.java))
-                    finish()
+                    promptBiometricAuthentication()
                 } else {
                     // Login failed
                     Toast.makeText(
