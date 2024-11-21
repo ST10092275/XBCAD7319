@@ -127,7 +127,7 @@ class AdminLogin : AppCompatActivity() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
                     // Navigate to MainActivity after successful authentication
-                    startActivity(Intent(this@Login, MainActivity::class.java))
+                    startActivity(Intent(this@AdminLogin, AdminMainActivity::class.java))
                     finish()
                 }
 
@@ -158,7 +158,7 @@ class AdminLogin : AppCompatActivity() {
             val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
-                    startActivity(Intent(this@Login, MainActivity::class.java))
+                    startActivity(Intent(this@AdminLogin, AdminMainActivity::class.java))
                     finish()
                 }
 
