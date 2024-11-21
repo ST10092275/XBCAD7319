@@ -1,4 +1,5 @@
-package com.example.xbcad7311
+package com.example.xbcad7319
+
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -26,7 +27,7 @@ class Register : AppCompatActivity() {
     private lateinit var number: EditText
     private lateinit var toggleButton: ToggleButton
     private lateinit var mainLayout: FrameLayout
-    private lateinit var register: Button
+    private lateinit var btnRegister: Button
 
     private val registeredEmails = mutableSetOf<String>()
 
@@ -45,10 +46,10 @@ class Register : AppCompatActivity() {
         number = findViewById(R.id.number)
         cpassword = findViewById(R.id.cpassword)
         fullname = findViewById(R.id.fullname)
-        register = findViewById(R.id.btnRegister)
+        btnRegister = findViewById(R.id.btnRegister)
         val registration = findViewById<TextView>(R.id.rLogin)
 
-        register.setOnClickListener {
+        btnRegister.setOnClickListener {
             registerUser()
         }
 
@@ -69,7 +70,6 @@ class Register : AppCompatActivity() {
             }
         }
     }
-
     private fun registerUser() {
         val emailInput = email.text.toString().trim()
         val passwordInput = password.text.toString().trim()
@@ -77,48 +77,43 @@ class Register : AppCompatActivity() {
         val fullNameInput = fullname.text.toString().trim()
         val numberInput = number.text.toString().trim()
 
-        if (registeredEmails.contains(emailInput)) {
-            Toast.makeText(this, "Email already used in this session", Toast.LENGTH_SHORT).show()
-            return
-        }
-
+        // Validate the inputs
         if (emailInput.isEmpty() || passwordInput.isEmpty() || confirmPasswordInput.isEmpty() ||
             fullNameInput.isEmpty() || numberInput.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if (passwordInput != confirmPasswordInput) {
+        } else if (registeredEmails.contains(emailInput)) {
+            Toast.makeText(this, "Email already used in this session", Toast.LENGTH_SHORT).show()
+        } else if (passwordInput != confirmPasswordInput) {
             Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
-            return
-        }
+        } else {
+            // Proceed with Firebase registration
+            auth.createUserWithEmailAndPassword(emailInput, passwordInput)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        val user = auth.currentUser
+                        val userId = user?.uid ?: ""
 
-        registeredEmails.add(emailInput)
-        // Create a new user with email and password
-        auth.createUserWithEmailAndPassword(emailInput, passwordInput)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    val userId = user?.uid ?: ""
+                        // Store user info in Firestore
+                        storeUserInfo(userId, fullNameInput, numberInput)
 
-                    // Store user info in Firestore
-                    storeUserInfo(userId, fullNameInput, numberInput)
+                        // Save full name to SharedPreferences
+                        val sharedPreferences: SharedPreferences = getSharedPreferences("User Prefs", MODE_PRIVATE)
+                        sharedPreferences.edit().putString("FULL_NAME", fullNameInput).apply()
 
-                    val sharedPreferences: SharedPreferences = getSharedPreferences("User Prefs", MODE_PRIVATE)
-                    sharedPreferences.edit().putString("FULL_NAME", fullNameInput).apply()
+                        Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
 
-                    Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-
-                    // Pass the full name to the Login activity
-                    val intent = Intent(this, Login::class.java)
-                    intent.putExtra("FULL_NAME", fullNameInput)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                        // Pass the full name to the Login activity
+                        val intent = Intent(this, Login::class.java)
+                        intent.putExtra("FULL_NAME", fullNameInput)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
+        }
     }
+
 
     private fun storeUserInfo(userId: String, fullName: String, number: String) {
         val userData = hashMapOf(
@@ -136,4 +131,6 @@ class Register : AppCompatActivity() {
                 Toast.makeText(this, "Error saving user info: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
 }
+

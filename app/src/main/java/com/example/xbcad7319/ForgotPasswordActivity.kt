@@ -7,8 +7,6 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.xbcad7311.AdminRegister
-import com.example.xbcad7311.Login
 import com.example.xbcad7311.R
 import com.google.firebase.auth.FirebaseAuth
 
@@ -61,4 +59,5 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 }
             }
     }
+
 }

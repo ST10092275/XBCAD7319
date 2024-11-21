@@ -1,4 +1,5 @@
-package com.example.xbcad7311
+package com.example.xbcad7319
+
 
 import android.content.Intent
 import android.os.Bundle
@@ -27,8 +28,6 @@ class AdminRegister : AppCompatActivity() {
 
     private val predefinedPin = "91273"
 
-    // Define the authorized email for admin registration
-    private val authorizedEmail = "apds7311bank@gmail.com"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,24 +74,25 @@ class AdminRegister : AppCompatActivity() {
         val confirmPassword = cpassword.text.toString().trim()
         val enteredPin = number.text.toString().trim() // Get entered PIN
 
-        // Basic input validation
+        // Check if any of the fields are empty
         if (emailText.isEmpty() || passwordText.isEmpty() || confirmPassword.isEmpty() || enteredPin.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
+        // Check if passwords match
         if (passwordText != confirmPassword) {
             Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Validate PIN
+        // Check if PIN is correct
         if (enteredPin != predefinedPin) {
             Toast.makeText(this, "Invalid PIN. Registration failed.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Register the admin using Firebase Authentication
+        // Proceed with Firebase Authentication registration
         auth.createUserWithEmailAndPassword(emailText, passwordText)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -109,17 +109,28 @@ class AdminRegister : AppCompatActivity() {
                     val db = FirebaseFirestore.getInstance()
                     db.collection("users").document(userId).set(userData)
                         .addOnSuccessListener {
-                            Toast.makeText(this, "Admin registered successfully", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this,
+                                "Admin registered successfully",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                         .addOnFailureListener { e ->
-                            Toast.makeText(this, "Error saving user info: ${e.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this,
+                                "Error saving user info: ${e.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                 } else {
-                    Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "Registration failed: ${task.exception?.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
     }
-
 
 }
 

@@ -1,18 +1,13 @@
 package com.example.xbcad7319
 
 import android.os.Bundle
-import android.content.Intent
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.Toast
+import android.widget.Button
 import com.example.xbcad7311.R
-import com.example.xbcad7319.data.model.ServiceRequest
-import com.google.firebase.firestore.FirebaseFirestore
+
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -21,10 +16,6 @@ class FragmentAdminService : Fragment() {
 
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var firestore: FirebaseFirestore
-    private lateinit var listView: ListView
-    private lateinit var adapter: ArrayAdapter<String>
-    private var serviceRequests = mutableListOf<ServiceRequest>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,25 +31,22 @@ class FragmentAdminService : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_admin_service, container, false)
 
-        // Initialize Firestore
-        firestore = FirebaseFirestore.getInstance()
-        listView = view.findViewById(R.id.lvRequests)
-
-        // Set up the ArrayAdapter
-        adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, mutableListOf())
-        listView.adapter = adapter
-
-        loadRequests()
-
-        listView.setOnItemClickListener { parent, view, position, id ->
-            val selectedRequest = serviceRequests[position]
-            val fragment = FragmentAdminDecision.newInstance(
-                selectedRequest.id,
-                selectedRequest.fullName,
-                selectedRequest.service_description
-            )
+        // When Recent Requests button is clicked, show Pending requests
+        val recentRequestsButton: Button = view.findViewById(R.id.recentRequestsButton)
+        recentRequestsButton.setOnClickListener {
+            val fragment = AdminViewRequests.newInstance("Pending", "SomeOtherValue")
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment) // Replace with your fragment container's ID
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        // When Requests History button is clicked, show Accepted/Denied requests
+        val requestsHistoryButton: Button = view.findViewById(R.id.requestsHistoryButton)
+        requestsHistoryButton.setOnClickListener {
+            val fragment = AdminViewRequests.newInstance("History", "SomeValueForParam2")
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit()
         }
@@ -66,41 +54,5 @@ class FragmentAdminService : Fragment() {
         return view
     }
 
-    private fun loadRequests() {
-        firestore.collection("service_requests")
-            .get()
-            .addOnSuccessListener { documents ->
-                Log.d("ServiceRequest", "Documents fetched: ${documents.size()}")
-                serviceRequests.clear()
-                adapter.clear()
-
-                if (!documents.isEmpty) {
-                    for (document in documents) {
-                        val request = document.toObject(ServiceRequest::class.java)
-                        request.id = document.id // Set the document ID
-                        serviceRequests.add(request)
-                        adapter.add("${request.fullName} requested for ${request.service_description}")
-                        Log.d("ServiceRequest", "Added request: $request")
-                    }
-                    adapter.notifyDataSetChanged()
-                } else {
-                    Log.d("ServiceRequest", "No data found in Firestore.")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.e("ServiceRequest", "Error fetching documents: $exception")
-                Toast.makeText(requireContext(), "Failed to load requests", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FragmentAdminService().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }
+

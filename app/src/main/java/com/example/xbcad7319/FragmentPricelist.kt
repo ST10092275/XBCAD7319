@@ -2,30 +2,20 @@ package com.example.xbcad7319
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import com.example.xbcad7311.R
-import com.google.android.gms.wallet.AutoResolveHelper
-import com.google.android.gms.wallet.IsReadyToPayRequest
-import com.google.android.gms.wallet.PaymentData
-import com.google.android.gms.wallet.PaymentDataRequest
-import com.google.android.gms.wallet.PaymentsClient
-import com.google.android.gms.wallet.Wallet
-import com.google.android.gms.wallet.WalletConstants
 import com.paypal.android.sdk.payments.PayPalConfiguration
 import com.paypal.android.sdk.payments.PayPalPayment
 import com.paypal.android.sdk.payments.PayPalService
 import com.paypal.android.sdk.payments.PaymentActivity
 import com.paypal.android.sdk.payments.PaymentConfirmation
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.math.BigDecimal
@@ -37,6 +27,24 @@ class FragmentPricelist : Fragment() {
 
     private var paymentTV: TextView? = null
 
+    // Define constants for prices
+    companion object {
+        const val ITEM1_PRICE = "27.35"
+        const val ITEM2_PRICE = "273.55"
+        const val ITEM3_PRICE = "43.77"
+        const val ITEM4_PRICE = "273.55"
+
+        const val CLIENT_KEY =
+            "AVKqnDlb_9KFaK-8LvM28tp06SE69U_nh3oSmHbEShqx65YJm5FQ1F3vfIHpwz1PGN1dyV0saLa4Ar65"
+
+        // Define constant for PayPal request code to avoid magic number
+        const val PAYPAL_REQUEST_CODE = 123
+
+        // PayPal Configuration Object
+        private val config: PayPalConfiguration = PayPalConfiguration()
+            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+            .clientId(CLIENT_KEY)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,11 +58,11 @@ class FragmentPricelist : Fragment() {
         val btnItem3 = rootView.findViewById<ImageButton>(R.id.btnItem3)
         val btnItem4 = rootView.findViewById<ImageButton>(R.id.btnItem4)
 
-        // Set onClick listeners for each ImageButton
-        btnItem1.setOnClickListener { startPayment("27.35") }
-        btnItem2.setOnClickListener { startPayment("273.55") }
-        btnItem3.setOnClickListener { startPayment("43.77") }
-        btnItem4.setOnClickListener { startPayment("273.55") }
+        // Set onClick listeners using constants
+        btnItem1.setOnClickListener { startPayment(ITEM1_PRICE) }
+        btnItem2.setOnClickListener { startPayment(ITEM2_PRICE) }
+        btnItem3.setOnClickListener { startPayment(ITEM3_PRICE) }
+        btnItem4.setOnClickListener { startPayment(ITEM4_PRICE) }
 
         return rootView
     }
@@ -82,38 +90,35 @@ class FragmentPricelist : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == PAYPAL_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                // Getting the payment confirmation
-                val confirm = data?.getParcelableExtra<PaymentConfirmation>(PaymentActivity.EXTRA_RESULT_CONFIRMATION)
+        if (requestCode != PAYPAL_REQUEST_CODE) return // Early exit if the request code is not matching
 
-                if (confirm != null) {
-                    try {
-                        // Getting the payment details
-                        val paymentDetails = confirm.toJSONObject().toString(4)
-                        val payObj = JSONObject(paymentDetails)
-                        val payID = payObj.getJSONObject("response").getString("id")
-                        val state = payObj.getJSONObject("response").getString("state")
-                        paymentTV?.text = "Payment $state\n with payment ID: $payID"
-                    } catch (e: JSONException) {
-                        Log.e("Error", "an unlikely failure occurred: ", e)
-                    }
-                }
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                Log.i("paymentExample", "The user canceled.")
-            } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
-                Log.i("paymentExample", "An invalid Payment or PayPalConfiguration was submitted.")
+        when (resultCode) {
+            Activity.RESULT_OK -> handlePaymentSuccess(data)
+            Activity.RESULT_CANCELED -> Log.i("paymentExample", "The user canceled.")
+            PaymentActivity.RESULT_EXTRAS_INVALID -> Log.i(
+                "paymentExample",
+                "An invalid Payment or PayPalConfiguration was submitted."
+            )
+
+            else -> Log.i("paymentExample", "Unhandled result code: $resultCode")
+        }
+    }
+
+    private fun handlePaymentSuccess(data: Intent?) {
+        val confirm =
+            data?.getParcelableExtra<PaymentConfirmation>(PaymentActivity.EXTRA_RESULT_CONFIRMATION)
+
+        if (confirm != null) {
+            try {
+                val paymentDetails = confirm.toJSONObject().toString(4)
+                val payObj = JSONObject(paymentDetails)
+                val payID = payObj.getJSONObject("response").getString("id")
+                val state = payObj.getJSONObject("response").getString("state")
+                paymentTV?.text = "Payment $state\n with payment ID: $payID"
+            } catch (e: JSONException) {
+                Log.e("Error", "an unlikely failure occurred: ", e)
             }
         }
     }
 
-    companion object {
-        const val clientKey: String = "AVKqnDlb_9KFaK-8LvM28tp06SE69U_nh3oSmHbEShqx65YJm5FQ1F3vfIHpwz1PGN1dyV0saLa4Ar65"
-        const val PAYPAL_REQUEST_CODE: Int = 123
-
-        // PayPal Configuration Object
-        private val config: PayPalConfiguration = PayPalConfiguration()
-            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
-            .clientId(clientKey)
-    }
 }

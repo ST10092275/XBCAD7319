@@ -2,10 +2,6 @@ package com.example.xbcad7319.data
 
 import com.example.xbcad7319.data.model.LoggedInUser
 
-/**
- * Class that requests authentication and user information from the remote data source and
- * maintains an in-memory cache of login status and user credentials information.
- */
 
 class LoginRepository(val dataSource: LoginDataSource) {
 
@@ -43,4 +39,6 @@ class LoginRepository(val dataSource: LoginDataSource) {
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }
+
 }
+
