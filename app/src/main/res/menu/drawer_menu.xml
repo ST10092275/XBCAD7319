@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottom_service"
+        android:icon="@drawable/service"
+        android:title="Service Requests"/>
+
+
+    <item
+        android:id="@+id/bottom_logout"
+        android:icon="@drawable/baseline_logout_24"
+        android:title="Logout"/>
+
+
+</menu>
