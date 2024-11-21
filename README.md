@@ -1,6 +1,5 @@
 # ConsultEase 
-ConsultEase is an Android application designed to streamline the process of service requests and management for both clients and administrators for Verstex Trading 505 (Pty) Ltd. 
-The app supports two user roles: Client and Admin. Clients can request services and make payments, while Admins can manage user profiles, accept or deny service requests, approve payments, schedule meetings, and generate reports. The app also features biometric authentication for secure login and utilizes Firebase for user management and PayPal for payment processing.
+ConsultEase is an Android application designed to streamline the process of service requests and management for both clients and ICT administrators for Verstex Trading 505 (Pty) Ltd. This application is created to mordenise the ways Versatex Trdaing manages their tasks. The app supports two user roles: Client and Admin. Clients can request services and make payments, while Admins can manage user profiles, accept or deny service requests, approve payments, schedule meetings, and generate reports. The app also features biometric authentication for secure login and utilizes Firebase for user management and PayPal for payment processing.
 
 ## Features:
 
@@ -44,6 +43,11 @@ Technical Details
 •	Cloud Firestore : storing user data and  service requests 
 •	Payment Integration: PayPal API for processing payments.
 
+## Running the code on Android studio
+1. Clone repository :https://github.com/ST10092275/XBCAD7319.git
+2. Then chose which device to run (emulator/physical device)
+3. Then clean and rebuild
+4. lastly you can run the code.
 
 ## How the App Was Compiled
 The ConsultEase Android App was developed using Kotlin as the primary programming language due to its efficiency and strong support for Android development. The development process included the following key components:
