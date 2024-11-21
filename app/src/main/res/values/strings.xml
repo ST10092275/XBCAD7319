@@ -58,4 +58,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="service_image">service_image\n</string>
+    <string name="title">title</string>
+    <string name="details">details\n</string>
 </resources>

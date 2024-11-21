@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     tools:context="com.example.xbcad7319.FragmentPerson">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ListView
+        android:id="@+id/client_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Client Profile" />
+        android:layout_marginTop="50dp"
+        tools:listitem="@layout/list_view" />
 
 </FrameLayout>
