@@ -5,10 +5,6 @@
         android:icon="@drawable/service"
         android:title="Service Requests"/>
 
-    <item
-        android:id="@+id/bottom_wallet"
-        android:icon="@drawable/wallet"
-        android:title="Payments"/>
 
     <item
         android:id="@+id/bottom_logout"

@@ -16,6 +16,9 @@ import com.example.xbcad7311.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
+//Code adapted from Android Developers
+//Add menus (2024)
+//https://developer.android.com/develop/ui/views/components/menus?authuser=1
 class AdminMainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerLayout: DrawerLayout
@@ -64,7 +67,6 @@ class AdminMainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.bottom_service -> loadFragment(FragmentAdminService())
-            R.id.bottom_wallet -> loadFragment(FragmentPayment())
             R.id.bottom_logout-> {
                 // Clear the user session if applicable, then navigate to Login
                 val intent = Intent(this, AdminLogin::class.java)

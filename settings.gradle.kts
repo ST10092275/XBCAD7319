@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "XBCAD7311"
+rootProject.name = "ConsultEase"
 include(":app")
  

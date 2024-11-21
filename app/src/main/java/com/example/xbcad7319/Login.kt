@@ -18,8 +18,13 @@ import com.example.xbcad7319.AdminMainActivity
 import com.example.xbcad7319.ForgotPasswordActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+//Code adapted from Android Developers
+//Biometric(2024)
+//https://developer.android.com/jetpack/androidx/releases/biometric
 
-
+//Code Adpted from GeeksforGeeks
+// Login and Register in Android using Firebase in Kotlin (2022) by ayus
+//https://www.geeksforgeeks.org/login-and-registration-in-android-using-firebase-in-kotlin/
 class Login : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var email: EditText
@@ -69,7 +74,7 @@ class Login : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
+//method to login user
     private fun loginUser() {
         val emailInput = email.text.toString().trim()
         val passwordInput = password.text.toString().trim()
@@ -96,9 +101,14 @@ class Login : AppCompatActivity() {
             }
     }
 
+    //prompts biometric authentication
     private fun promptBiometricAuthentication() {
         val biometricManager = BiometricManager.from(this)
-        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS) {
+        if (biometricManager.canAuthenticate(
+                BiometricManager.Authenticators.BIOMETRIC_STRONG or
+                        BiometricManager.Authenticators.DEVICE_CREDENTIAL
+            ) == BiometricManager.BIOMETRIC_SUCCESS
+        ) {
             val executor = ContextCompat.getMainExecutor(this)
             val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -121,13 +131,45 @@ class Login : AppCompatActivity() {
 
             val promptInfo = BiometricPrompt.PromptInfo.Builder()
                 .setTitle("ConsultEase")
-                .setSubtitle("Login using your fingerprint")
-                .setNegativeButtonText("Use account password")
+                .setSubtitle("Login using your fingerprint or device credentials")
+                .setAllowedAuthenticators(
+                    BiometricManager.Authenticators.BIOMETRIC_STRONG or
+                            BiometricManager.Authenticators.DEVICE_CREDENTIAL
+                )
+                .build()
+
+            biometricPrompt.authenticate(promptInfo)
+        } else if (biometricManager.canAuthenticate(BiometricManager.Authenticators.DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS) {
+            // Device supports PIN/Password/Pattern but not Biometric
+            val executor = ContextCompat.getMainExecutor(this)
+            val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    startActivity(Intent(this@Login, MainActivity::class.java))
+                    finish()
+                }
+
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(applicationContext, "Authentication error: $errString", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(applicationContext, "Authentication failed", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+            val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                .setTitle("ConsultEase")
+                .setSubtitle("Login using your device credentials")
+                .setAllowedAuthenticators(BiometricManager.Authenticators.DEVICE_CREDENTIAL)
                 .build()
 
             biometricPrompt.authenticate(promptInfo)
         } else {
-            Toast.makeText(this, "Biometric authentication is not available.", Toast.LENGTH_LONG).show()
+            // No biometric or device credentials available
+            Toast.makeText(this, "No authentication methods available on this device.", Toast.LENGTH_LONG).show()
         }
     }
 }

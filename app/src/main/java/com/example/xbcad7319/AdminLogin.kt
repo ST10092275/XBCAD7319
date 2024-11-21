@@ -19,6 +19,13 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 
+//Code adapted from Android Developers
+//Biometric(2024)
+//https://developer.android.com/jetpack/androidx/releases/biometric
+
+//Code Adpted from GeeksforGeeks
+// Login and Register in Android using Firebase in Kotlin (2022) by ayus
+//https://www.geeksforgeeks.org/login-and-registration-in-android-using-firebase-in-kotlin/
 class AdminLogin : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var email: EditText
@@ -68,7 +75,7 @@ class AdminLogin : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
+//method to login admin
     private fun loginAdmin() {
         val emailText = email.text.toString().trim()
         val passwordText = password.text.toString().trim()
@@ -112,7 +119,7 @@ class AdminLogin : AppCompatActivity() {
         errorMessage.text = message
         errorMessage.visibility = View.VISIBLE
     }
-
+//prompst biometric authentication
     private fun promptBiometricAuthentication() {
         val biometricManager = BiometricManager.from(this)
         if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS) {
@@ -120,7 +127,7 @@ class AdminLogin : AppCompatActivity() {
             val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
-                    startActivity(Intent(this@AdminLogin, AdminMainActivity::class.java))
+                    startActivity(Intent(this@AdminLogin, AdminMainActivity::class.java)) //when fingerprint scan is successful, navigate to admin main activity
                     finish()
                 }
 

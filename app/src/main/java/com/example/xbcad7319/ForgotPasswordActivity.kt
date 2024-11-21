@@ -12,6 +12,10 @@ import com.example.xbcad7311.Login
 import com.example.xbcad7311.R
 import com.google.firebase.auth.FirebaseAuth
 
+//Code apted from StackOverflow
+//Forgot password in Firebase for Android(2017) by Diego Venancio
+//https://stackoverflow.com/questions/42800349/forgot-password-in-firebase-for-android
+
 class ForgotPasswordActivity : AppCompatActivity() {
 
     private lateinit var emailEditText: EditText

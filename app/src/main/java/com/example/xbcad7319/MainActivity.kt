@@ -19,8 +19,9 @@ import com.google.android.material.navigation.NavigationView
 import javax.net.ssl.SSLContext
 import java.security.NoSuchAlgorithmException
 
-
-
+//Code adapted from Android Developers
+//Add menus (2024)
+//https://developer.android.com/develop/ui/views/components/menus?authuser=1
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
 
