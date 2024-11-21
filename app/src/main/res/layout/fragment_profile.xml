@@ -1,0 +1,149 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.example.xbcad7319.Profile">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout_2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="175dp"
+            android:layout_height="131dp"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="image55"
+            android:src="@drawable/p" />
+
+        <TextView
+            android:id="@+id/textView_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imageView3"
+            android:layout_alignParentStart="true"
+            android:text="Name:"
+            android:layout_marginStart="20dp"
+            android:textColor="#2E7D32"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/textView_name"
+            android:layout_marginStart="167dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toEndOf="@id/textView_name"
+            android:text="jone"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_name"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:text="Phone number:"
+            android:textColor="#2E7D32"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView_names"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_name"
+            android:layout_alignBottom="@+id/textView_phone"
+            android:layout_marginStart="96dp"
+            android:layout_marginTop="-1dp"
+            android:layout_marginBottom="2dp"
+            android:layout_toEndOf="@+id/textView_phone"
+            android:text="0724363127"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView_Service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_names"
+            android:layout_centerHorizontal="true"
+            android:text="Service Request"
+            android:textColor="@color/green"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp" />
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="396dp"
+            android:layout_height="141dp"
+            android:layout_below="@id/textView_Service"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/serviceRequestsTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Content for the service request"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/newTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/scrollView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="Meetings"
+            android:textColor="@color/green"
+            android:textSize="20sp" />
+
+        <ScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_below="@id/newTextView"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/serviceRequestsTextView2"
+                    android:layout_width="match_parent"
+                    android:text="Content for the meeting"
+                    android:layout_height="128dp"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/scrollView2"
+            android:layout_centerHorizontal="true"
+            android:text="Add Meeting"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+</FrameLayout>
