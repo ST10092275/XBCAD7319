@@ -11,7 +11,7 @@ import com.example.xbcad7311.R
 
 
 
-class EnterR : Fragment() {
+class FragmentEnterR : Fragment() {
 
     private lateinit var titleEditText: EditText // EditText for report title
     private lateinit var detailsEditText: EditText // EditText for report details
